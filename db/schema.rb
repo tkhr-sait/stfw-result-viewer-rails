@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180118063038) do
+ActiveRecord::Schema.define(version: 20180118074924) do
 
   create_table "id_list_model_gens", id: false, force: :cascade do |t|
     t.string "id_list"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20180118063038) do
 
   create_table "postdata", force: :cascade do |t|
     t.string "hookId"
+    t.string "run_id"
     t.string "payload"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
