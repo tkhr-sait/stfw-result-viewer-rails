@@ -22,12 +22,17 @@ class WebhookController < ApplicationController
   end
 
   def get_hooks_using_get1
-
-    render json: {"message" => "yes, it worked"}
+    array = []
+    Postdatum.select("distinct hookId, run_id")
+             .order(created_at: :desc).each { |data|
+       array << { hookId: data.hookId, run_id: data.run_id }
+    }
+    render json: {"message" => "ok", "data" => array}
   end
 
   def get_hooks_with_id_using_get1
     gv = Gviz.new
+    # 最新の run_id を対象にする
     rec = Postdatum.order(created_at: :desc).find_by(hookId: params['hookId'])
     Postdatum.where("hookId = ? and run_id = ?", params['hookId'], rec.run_id)
              .order(created_at: :asc).each { |data|

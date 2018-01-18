@@ -23,3 +23,20 @@ To list all your routes, use:
 ```
 bin/rake routes
 ```
+
+Docker
+```
+# docker準備
+sudo docker-compose build
+# 起動（停止はdown）
+sudo docker-compose up -d
+
+# stfwのwebhook連携(post先)
+export URL_WEBHOOK=http://localhost:3000/hooks/stfw
+
+# ブラウザ(getメソッド)
+## 一覧
+http://localhost:3000/hooks
+## グラフ表示
+http://localhost:3000/hooks/stfw
+```
