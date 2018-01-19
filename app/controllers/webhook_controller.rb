@@ -76,9 +76,9 @@ class WebhookController < ApplicationController
 
       # https://www.graphviz.org/doc/info/colors.html
       color='white'
-      if json_data['payload']['status'] == 'success' then
+      if json_data['payload']['status'] == 'Success' then
         color='palegreen'
-      elsif json_data['payload']['status'] == 'error' then
+      elsif json_data['payload']['status'] == 'Error' then
         color='lightcoral'
       end
 
@@ -100,9 +100,9 @@ class WebhookController < ApplicationController
                             target[target.keys[0]]['start time'],
                             target[target.keys[0]]['end time'])
           childcolor='white'
-          if target[target.keys[0]]['result'] == 'success' then
+          if target[target.keys[0]]['result'] == 'Success' then
             childcolor='palegreen'
-          elsif target[target.keys[0]]['result'] == 'error' then
+          elsif target[target.keys[0]]['result'] == 'Error' then
             childcolor='lightcoral'
           end
           childkey=sprintf("%s+%s",key,target.keys[0])
