@@ -8,5 +8,14 @@
 
   <body>
     <img src="data:image/png;base64,<%= @image %>" />
+    <table border=1>
+      <tr><th>#</th><th>payloads</th></tr>
+    <% idx=1 %>
+    <% @jsons.each do |json| %>
+      <tr><td><%= idx %></td><td><%= json %></td></tr>
+      <% idx+=1 %>
+    <% end %>
+    </table>
   </body>
+
 </html>

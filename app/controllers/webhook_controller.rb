@@ -32,11 +32,15 @@ class WebhookController < ApplicationController
 
   def get_hooks_with_id_using_get1
     gv = Gviz.new
+    gv.global layout: "dot"
+
+    @jsons = []
     # 最新の run_id を対象にする
     rec = Postdatum.order(created_at: :desc).find_by(hookId: params['hookId'])
     Postdatum.where("hookId = ? and run_id = ?", params['hookId'], rec.run_id)
              .order(created_at: :asc).each { |data|
       json_data = JSON.parse(data.payload)
+      @jsons << json_data
 
       if json_data['payload']['type'] == 'run' then
         pkey=""
@@ -111,9 +115,9 @@ class WebhookController < ApplicationController
     io = File.open("sample.dot")
     data = io.read
     io = File.open("sample.png")
-    #image = Base64.strict_encode64(io.read)
     @image = Base64.strict_encode64(io.read)
     render 'layouts/webhook'
+    #image = Base64.strict_encode64(io.read)
     # render json: {"message" => "ok","data" => data,"image" => image}
   end
 end
