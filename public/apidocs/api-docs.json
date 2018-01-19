@@ -1,0 +1,19 @@
+{
+  "apiVersion": "v1",
+  "swaggerVersion": "1.2",
+  "basePath": "http://localhost:3000",
+  "apis": [
+    {
+      "path": "/apidocs/webhook.{format}",
+      "description": "Webhook"
+    }
+  ],
+  "authorizations": null,
+  "info": {
+    "title": "stfw Graphical Result Viewer",
+    "description": "stfw Graphical Result Viewer API",
+    "contact": "tkhr.sait@gmail.com",
+    "license": "Apache 2.0",
+    "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0.html"
+  }
+}
