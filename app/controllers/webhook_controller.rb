@@ -30,7 +30,7 @@ class WebhookController < ApplicationController
   end
 
   def add_hooks_with_id_using_post1
-    postdatum = Postdatum.new({hookId: params['hookId'], run_id: params['payload']['run']['run id'], payload: params.to_json})
+    postdatum = Postdatum.new({hookId: params['hookId'], run_id: params['payload']['run']['run_id'], payload: params.to_json})
     postdatum.save
 
     render json: {"message" => "yes, it worked"}
@@ -57,37 +57,17 @@ class WebhookController < ApplicationController
       json_data = JSON.parse(data.payload)
       @jsons << json_data
 
-      if json_data['payload']['type'] == 'run' then
-        pkey=""
-        ukey=json_data['payload']['run']['run id']
-
-      elsif json_data['payload']['type'] == 'scenario' then
-        pkey=sprintf("%s+run",
-                     json_data['payload']['run']['run id'])
-        ukey=json_data['payload']['run']['scenario']['name']
-
-      elsif json_data['payload']['type'] == 'bizdate' then
-        pkey=sprintf("%s+run+%s",
-                     json_data['payload']['run']['run id'],
-                     json_data['payload']['run']['scenario']['name'])
-        ukey=json_data['payload']['run']['scenario']['bizdate']['dirname']
-
-      elsif json_data['payload']['type'] == 'process' then
-        pkey=sprintf("%s+run+%s+%s",
-                     json_data['payload']['run']['run id'],
-                     json_data['payload']['run']['scenario']['name'],
-                     json_data['payload']['run']['scenario']['bizdate']['dirname'])
-        ukey=json_data['payload']['run']['scenario']['bizdate']['process']['dirname']
-
-      end
-
+      id=json_data['payload']['id']
+      parent_id=json_data['payload']['parent_id']
+p id,parent_id
+      run_id=json_data['payload']['run']['run_id']
       desc=sprintf("%s(%s)\n%s[%s]\nstart:%s\nend  :%s",
                     json_data['payload']['type'],
-                    ukey,
+                    id,
                     json_data['payload']['status'],
-                    json_data['payload']['processing time'],
-                    json_data['payload']['start time'],
-                    json_data['payload']['end time'])
+                    json_data['payload']['processing_time'],
+                    json_data['payload']['start_time'],
+                    json_data['payload']['end_time'])
 
       # https://www.graphviz.org/doc/info/colors.html
       color='white'
@@ -97,13 +77,10 @@ class WebhookController < ApplicationController
         color='lightcoral'
       end
 
-      if pkey != "" then
-        key=sprintf("%s+%s", pkey, ukey)
-        gv.add pkey.gsub(/[_+]/,"x").to_sym => key.gsub(/[_+]/,"x").to_sym
-      else
-        key=sprintf("%s+run",ukey)
+      if parent_id != run_id then
+        gv.add parent_id.gsub(/[_+]/,"x").to_sym => id.gsub(/[_+]/,"x").to_sym
       end
-      gv.node key.gsub(/[_+]/,"x").to_sym, label: desc, shape: 'box', style: 'filled,rounded', fillcolor: color
+      gv.node id.gsub(/[_+]/,"x").to_sym, label: desc, shape: 'box', style: 'filled,rounded', fillcolor: color
       # plugin
       if json_data['payload']['type'] == 'process' then
         json_data['payload']['run']['scenario']['bizdate']['process']['plugin']['targets'].each { | target |
@@ -111,17 +88,17 @@ class WebhookController < ApplicationController
                             json_data['payload']['run']['scenario']['bizdate']['process']['plugin']['type'],
                             target.keys[0],
                             target[target.keys[0]]['result'],
-                            target[target.keys[0]]['processing time'],
-                            target[target.keys[0]]['start time'],
-                            target[target.keys[0]]['end time'])
+                            target[target.keys[0]]['processing_time'],
+                            target[target.keys[0]]['start_time'],
+                            target[target.keys[0]]['end_time'])
           childcolor='white'
           if target[target.keys[0]]['result'] == 'Success' then
             childcolor='palegreen'
           elsif target[target.keys[0]]['result'] == 'Error' then
             childcolor='lightcoral'
           end
-          childkey=sprintf("%s+%s",key,target.keys[0])
-          gv.add key.gsub(/[_+]/,"x").to_sym => childkey.gsub(/[_+]/,"x").to_sym
+          childkey=sprintf("%s+%s",id,target.keys[0])
+          gv.add id.gsub(/[_+]/,"x").to_sym => childkey.gsub(/[_+]/,"x").to_sym
           gv.node childkey.gsub(/[_+]/,"x").to_sym, label: childdesc, shape: 'box', style: 'filled,rounded', fillcolor: childcolor
         }
       end
