@@ -13,29 +13,21 @@ require 'gviz'
 require 'base64'
 
 class WebhookController < ApplicationController
+  include Swagger::Blocks
 
-  before_action :set_postdata, only: [:hooks]
-
-  swagger_controller :webhook, 'Webhook'
-  swagger_api :hooks do
-    summary "get Hooks"
-    notes 'get a postdata object'
-    param :path, :hookId, :string, :optional,"hookId"
-    response :ok
-    response :not_found
+  swagger_path '/hooks' do
+    operation :get do
+      key :summary, "/hooks GET"
+      key :descroption, "Returns all Hooks"
+      key :operationId, "getHooksUsingGet_1"
+      response 200 do
+        key :description, "Successful Operation"
+      end
+      response 404 do
+        key :description, "Not Found"
+      end
+    end
   end
-  swagger_model :Postdata do
-    description "A postdata object."
-    property :id, :integer, :required, "id"
-    property :hookId, :string, :optional, "hookId"
-    property :run_id, :string, :optional, "run_id"
-    property :payload,:string, :optional, "payload"
-    property :created_at,      :datetime, :optional, "created_at"
-    property :updated_at,      :datetime, :optional, "updated_at"
-  end
-
-
-
 
   def add_hooks_with_id_using_post1
     postdatum = Postdatum.new({hookId: params['hookId'], run_id: params['payload']['run']['run id'], payload: params.to_json})

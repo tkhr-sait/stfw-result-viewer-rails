@@ -39,4 +39,6 @@ export URL_WEBHOOK=http://localhost:3000/hooks/stfw
 http://localhost:3000/hooks
 ## グラフ表示
 http://localhost:3000/hooks/stfw
+## swagger json表示
+http://localhost:3000/apidocs
 ```
