@@ -15,20 +15,52 @@ require 'base64'
 class WebhookController < ApplicationController
   include Swagger::Blocks
 
-  swagger_path '/hooks' do
-    operation :get do
-      key :summary, "/hooks GET"
-      key :descroption, "Returns all Hooks"
-      key :operationId, "getHooksUsingGet_1"
-      response 200 do
-        key :description, "Successful Operation"
+  #------------------------------------------
+  swagger_path '/hooks/{hookId}' do
+    operation :post do
+      key :tags, [
+        'webhook'
+      ]
+      key :summary, '/hooks/{hookId} POST'
+      key :operationId, 'addHooksWithIdUsingPOST_1'
+      key :consumes, [
+        'application/json',
+        'application/x-yaml'
+      ]
+      key :produces, [
+        'application/x-yaml'
+      ]
+      parameter do
+        key :name, 'hookId'
+        key :in, :path
+        key :description, 'ID of Hook that needs to be add'
+        key :required, true
+        key :type, :string
       end
-      response 404 do
-        key :description, "Not Found"
+      parameter do
+        key :name, 'payload'
+        key :in, :body
+        key :description, 'stfw webhook object that needs to be add'
+        key :required, true
+        schema do
+          key :type, :object
+        end
+      end
+      response 200 do
+        key :description, 'OK'
+        schema do
+          key :type, :object
+        end
+      end
+      response 400 do
+        key :description, 'Invalid input'
+        schema do
+          key :type, :object
+        end
       end
     end
   end
-
+  #------------------------------------------
   def add_hooks_with_id_using_post1
     postdatum = Postdatum.new({hookId: params['hookId'], run_id: params['payload']['run']['run_id'], payload: params.to_json})
     postdatum.save
@@ -45,6 +77,26 @@ class WebhookController < ApplicationController
     render json: {"message" => "ok", "data" => array}
   end
 
+  #------------------------------------------
+  swagger_path '/hooks' do
+    operation :get do
+      key :tags, [
+        'webhook'
+      ]
+      key :summary, "/hooks GET"
+      key :description, "Returns all Hooks"
+      key :operationId, "getHooksUsingGet_1"
+#      parameter do
+#      end
+      response 200 do
+        key :description, "Successful Operation"
+      end
+      response 404 do
+        key :description, "Not Found"
+      end
+    end
+  end
+  #------------------------------------------
   def get_hooks_with_id_using_get1
     gv = Gviz.new
     gv.global layout: "dot"
