@@ -104,6 +104,10 @@ class WebhookController < ApplicationController
     @jsons = []
     # 最新の run_id を対象にする
     rec = Postdatum.order(created_at: :desc).find_by(hookId: params['hookId'])
+    if rec == nil then
+      render html: 'no data'
+      return
+    end
     Postdatum.where("hookId = ? and run_id = ?", params['hookId'], rec.run_id)
              .order(created_at: :asc).each { |data|
       json_data = JSON.parse(data.payload)
@@ -111,11 +115,23 @@ class WebhookController < ApplicationController
 
       id=json_data['payload']['id']
       parent_id=json_data['payload']['parent_id']
-p id,parent_id
       run_id=json_data['payload']['run']['run_id']
+      key = ""
+      case json_data['payload']['type']
+      when 'run' then
+        key=run_id
+      when 'scenario' then
+        key=json_data['payload']['run']['scenario']['name']
+      when 'bizdate' then
+        key=json_data['payload']['run']['scenario']['bizdate']['dirname']
+      when 'process' then
+        key=json_data['payload']['run']['scenario']['bizdate']['process']['dirname']
+      end
+
+
       desc=sprintf("%s(%s)\n%s[%s]\nstart:%s\nend  :%s",
                     json_data['payload']['type'],
-                    id,
+                    key,
                     json_data['payload']['status'],
                     json_data['payload']['processing_time'],
                     json_data['payload']['start_time'],
