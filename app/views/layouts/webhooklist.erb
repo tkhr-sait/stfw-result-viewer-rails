@@ -7,12 +7,11 @@
   </head>
 
   <body>
-    <img src="data:image/png;base64,<%= @image %>" />
     <table border=1>
-      <tr><th>#</th><th>payloads</th></tr>
+      <tr><th>#</th><th>url</th></tr>
     <% idx=1 %>
     <% @array.each do |data| %>
-      <tr><td><%= idx %></td><td><pre><%= data %></pre></td></tr>
+      <tr><td><%= idx %></td><td><a href="/hooks/<%= data[:hookId] %>/<%= data[:run_id] %>"><%= data[:hookId] %>/<%= data[:run_id] %></a></td></tr>
       <% idx+=1 %>
     <% end %>
     </table>
