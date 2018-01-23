@@ -17,7 +17,7 @@ class ApidocsController < ActionController::Base
         key :url, 'http://www.apache.org/licenses/LICENSE-2.0.html'
       end
     end
-    key :host, '192.168.128.99:3000'
+    key :host, 'localhost:3000'
     key :basePath, '/'
     tags do
       key :name, 'webhook'
