@@ -138,7 +138,7 @@ class WebhookController < ApplicationController
     @image = Base64.strict_encode64(io.read)
     render 'layouts/webhook'
     #image = Base64.strict_encode64(io.read)
-    # render json: {"message" => "ok","data" => data,"image" => image}
+    #render json: {"message" => "ok","data" => data,"image" => image}
   end
 
   #------------------------------------------
@@ -182,7 +182,7 @@ class WebhookController < ApplicationController
     @image = Base64.strict_encode64(io.read)
     render 'layouts/webhook'
     #image = Base64.strict_encode64(io.read)
-    # render json: {"message" => "ok","data" => data,"image" => image}
+    #render json: {"message" => "ok","data" => data,"image" => image}
   end
 
 
@@ -229,9 +229,9 @@ class WebhookController < ApplicationController
       end
 
       if parent_id != run_id then
-        gv.add parent_id.gsub(/[_+]/,"x").to_sym => id.gsub(/[_+]/,"x").to_sym
+        gv.add parent_id.gsub(/[_+]/,"X").to_sym => id.gsub(/[_+]/,"X").to_sym
       end
-      gv.node id.gsub(/[_+]/,"x").to_sym, label: desc, shape: 'box', style: 'filled,rounded', fillcolor: color
+      gv.node id.gsub(/[_+]/,"X").to_sym, label: desc, shape: 'box', style: 'filled,rounded', fillcolor: color
       # plugin
       if json_data['payload']['type'] == 'process' then
         json_data['payload']['run']['scenario']['bizdate']['process']['plugin']['targets'].each { | target |
@@ -249,8 +249,8 @@ class WebhookController < ApplicationController
             childcolor='lightcoral'
           end
           childkey=sprintf("%s+%s",id,target.keys[0])
-          gv.add id.gsub(/[_+]/,"x").to_sym => childkey.gsub(/[_+]/,"x").to_sym
-          gv.node childkey.gsub(/[_+]/,"x").to_sym, label: childdesc, shape: 'box', style: 'filled,rounded', fillcolor: childcolor
+          gv.add id.gsub(/[_+]/,"X").to_sym => childkey.gsub(/[_+]/,"X").to_sym
+          gv.node childkey.gsub(/[_+]/,"X").to_sym, label: childdesc, shape: 'box', style: 'filled,rounded', fillcolor: childcolor
         }
       end
     }

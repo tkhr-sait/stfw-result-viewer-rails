@@ -1,0 +1,22 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.38/browser.min.js"></script>
+    <script src="viz-lite.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      fetch("http://localhost:3000/hooks/stfw")
+      .then(function(response) {
+        return response.json()
+      })
+      .then(function(json) {
+        const image = Viz(json['data'], { format: "png-image-element" } )
+        document.getElementById('root').appendChild(image);
+      })
+      
+    </script>
+  </body>
+</html>

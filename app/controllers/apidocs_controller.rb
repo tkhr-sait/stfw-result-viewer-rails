@@ -27,6 +27,7 @@ class ApidocsController < ActionController::Base
 
   SWAGGERED_CLASSES = [
     WebhookController,
+    Postdatum,
     self,
   ].freeze
 
